@@ -30,6 +30,15 @@ dependencies = [
     "pandas",
     "pre-commit",
     "jupyter",
+    "mirar",
+    "tqdm"
+]
+[project.optional-dependencies]
+dev = [
+    "black",
+    "isort",
+    "pylint",
+    "coveralls",
 ]
 
 [project.urls]
