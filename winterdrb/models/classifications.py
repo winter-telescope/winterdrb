@@ -9,5 +9,6 @@ RB_CLASS = {
     3: "Bogus - YinYang",
     4: "Bogus - Diffraction Spike",
     5: "Bogus - Bad Astrometry",
-    6: "Bogus - Out of Focus",
+    6: "Bogus - Stripes",
+    7: "Missing cutouts"
 }
