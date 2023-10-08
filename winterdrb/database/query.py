@@ -21,7 +21,7 @@ def get_night_db_entries(night, include_classified: bool = False,
     constraint = DBQueryConstraints("night", night, "=")
 
     if not include_classified:
-        constraint.add_constraint("humanclass", 1, "<")
+        constraint.add_constraint("humanclass", 0, "<")
 
     return select_from_table(constraint, RealBogus.sql_model,
                              max_num_results=max_num_results)
