@@ -16,7 +16,7 @@ def get_night_db_entries(night, include_classified: bool = False,
     :param night: Night to get entries for
     :param include_classified: Boolean to include classified entries
     :param max_num_results: Limit the number of entries returned
-    :return: Datframe with entries
+    :return: Dataframe with entries
     """
     constraint = DBQueryConstraints("night", night, "=")
 
