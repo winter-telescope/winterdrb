@@ -4,16 +4,18 @@ Module for path constants and functions.
 import os
 from pathlib import Path
 
-INPUT_DATA_DIR = os.getenv('INPUT_DATA_DIR', None)
+INPUT_DATA_DIR = os.getenv("INPUT_DATA_DIR", None)
 BASE_DATA_DIR = os.getenv("BASE_DATA_DIR", None)
 
 if INPUT_DATA_DIR is None:
-    raise ValueError("INPUT_DATA_DIR not set, set it using "
-                     "`export INPUT_DATA_DIR=/path/to/data`")
+    raise ValueError(
+        "INPUT_DATA_DIR not set, set it using `export INPUT_DATA_DIR=/path/to/data`"
+    )
 
 if BASE_DATA_DIR is None:
-    raise ValueError("BASE_DATA_DIR not set, set it using "
-                     "`export BASE_DATA_DIR=/path/to/data`")
+    raise ValueError(
+        "BASE_DATA_DIR not set, set it using `export BASE_DATA_DIR=/path/to/data`"
+    )
 
 INPUT_DATA_DIR = Path(INPUT_DATA_DIR)
 BASE_DATA_DIR = Path(BASE_DATA_DIR)
