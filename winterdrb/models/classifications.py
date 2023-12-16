@@ -12,5 +12,5 @@ RB_CLASS = {
     # 6: "Bogus - Stripes",
     7: "Missing cutouts",
     8: "Bogus - Background",
-    9: "Bogus - Failed imsub"
+    9: "Bogus - Failed imsub",
 }
