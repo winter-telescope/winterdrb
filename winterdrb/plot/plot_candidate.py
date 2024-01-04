@@ -29,11 +29,11 @@ def generate_single_page(row: pd.Series, ann_fields: list[str]) -> Figure:
 
         data = decode_img(row[cutout])
 
-        vmin, vmax = np.percentile(data, [0, 100])
+        vmin, vmax = np.nanpercentile(data, [0, 100])
         data_ = visualization.AsinhStretch()((data - vmin) / (vmax - vmin))
         ax.imshow(
             data_,
-            norm=Normalize(*np.percentile(data_, [0.5, 99.5])),
+            norm=Normalize(*np.nanpercentile(data_, [0.5, 99.5])),
             aspect="auto",
         )
         ax.set_xticks([])
