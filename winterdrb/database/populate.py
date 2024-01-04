@@ -10,12 +10,14 @@ from winterdrb.plot import generate_single_page
 from winterdrb.utils import get_cleaned_night_data
 
 
-def populate_night(night: str | int, ann_fields: list[str]) -> None:
+def populate_night(night: str | int, ann_fields: list[str],
+                   skip_db_entries: bool = False) -> None:
     """
     Populate the database with the data from a given night.
 
     :param night: Night to populate
     :param ann_fields: Fields to annotate
+    :param skip_db_entries: Skip adding to the database, only make plots
     :return: None
     """
     cut = get_cleaned_night_data(night)
@@ -29,11 +31,12 @@ def populate_night(night: str | int, ann_fields: list[str]) -> None:
         plt.savefig(savepath)
         plt.close()
 
-        new = RealBogus(
-            night=night,
-            candid=row["candid"],
-            objectid=row["objectid"],
-            pdfpath=savepath.as_posix(),
-            avropath=avropath.as_posix(),
-        )
-        new.insert_entry()
+        if not skip_db_entries:
+            new = RealBogus(
+                night=night,
+                candid=row["candid"],
+                objectid=row["objectid"],
+                pdfpath=savepath.as_posix(),
+                avropath=avropath.as_posix(),
+            )
+            new.insert_entry()
