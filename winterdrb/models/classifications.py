@@ -13,4 +13,5 @@ RB_CLASS = {
     7: "Missing cutouts",
     8: "Bogus - Background",
     9: "Bogus - Failed imsub",
+    10: "Bogus - Low S/N"
 }
