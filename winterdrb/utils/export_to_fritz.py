@@ -1,6 +1,9 @@
 """
 Module to export WINTER sources to SkyPortal
 """
+import logging
+import sys
+
 from mirar.data import Dataset, ImageBatch, SourceBatch
 from mirar.pipelines.winter import WINTERPipeline
 from mirar.processors.skyportal import SkyportalCandidateUploader, SkyportalClient
@@ -23,6 +26,8 @@ def export_reals(night: str | int):
 
     reals = df[real_mask]["objectid"].tolist()
 
+    print(f"Having the following reals: {reals}")
+
     def select_real_sources(source_batch: SourceBatch) -> SourceBatch:
         """
         Function to select only human-tagged Real sources
@@ -43,6 +48,8 @@ def export_reals(night: str | int):
             source.set_data(filtered_df)
             new_batch.append(source)
 
+        print(f"Have {len(new_batch)} sources")
+
         return new_batch
 
     export_real_pipe = [
@@ -53,11 +60,22 @@ def export_reals(night: str | int):
             group_ids=[1431],
             fritz_filter_id=1130,
             instrument_id=1087,
-            stream_id=3,
+            stream_id=1005,
             update_thumbnails=True,
             skyportal_client=SkyportalClient(base_url="https://fritz.science/api/"),
         ),
     ]
+
+    log = logging.getLogger("mirar")
+
+    handler = logging.StreamHandler(sys.stdout)
+
+    formatter = logging.Formatter(
+        "%(name)s [l %(lineno)d] - %(levelname)s - %(message)s"
+    )
+    handler.setFormatter(formatter)
+    log.addHandler(handler)
+    log.setLevel("INFO")
 
     new_key = "export_real"
 
