@@ -24,7 +24,7 @@ def combine_avro_files(night: str | int):
     logging.info(f"Found {len(avro_files)} avro files")
 
     if len(avro_files) == 0:
-        err = f"No avro files found for {night}"
+        err = f"No avro files found for {night} at {avro_dir}"
         logging.error(err)
         raise FileNotFoundError(err)
 
