@@ -1,6 +1,9 @@
 """
 Module for parsing avro data
 """
+
+from pathlib import Path
+
 import pandas as pd
 from fastavro import reader
 
@@ -9,18 +12,13 @@ from winterdrb.paths import get_combined_avro_path
 from winterdrb.utils.combine_avro import combine_avro_files
 
 
-def parse_night_data(night: str | int) -> pd.DataFrame:
+def load_avro(avro_path: Path) -> pd.DataFrame:
     """
-    Load the data for a given night into a pandas DataFrame.
+    Load the avro file into a pandas DataFrame.
 
-    :param night: Night to load data for.
+    :param avro_path: Avro file to load.
     :return: DataFrame of data.
     """
-
-    avro_path = get_combined_avro_path(night)
-
-    if not avro_path.exists():
-        combine_avro_files(night)
 
     records = []
     with open(avro_path, "rb") as avro_f:
@@ -55,9 +53,25 @@ def parse_night_data(night: str | int) -> pd.DataFrame:
 
         unpacked.append(new)
 
-    night_df = pd.DataFrame(unpacked)
+    res = pd.DataFrame(unpacked)
 
-    return night_df
+    return res
+
+
+def parse_night_data(night: str | int) -> pd.DataFrame:
+    """
+    Load the data for a given night into a pandas DataFrame.
+
+    :param night: Night to load data for.
+    :return: DataFrame of data.
+    """
+
+    avro_path = get_combined_avro_path(night)
+
+    if not avro_path.exists():
+        combine_avro_files(night)
+
+    return load_avro(avro_path)
 
 
 def get_cleaned_night_data(night: str | int) -> pd.DataFrame:
