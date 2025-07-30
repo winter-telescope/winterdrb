@@ -50,14 +50,12 @@ def export_reals(night: str | int):
         CustomSourceTableModifier(modifier_function=select_real_sources),
         SkyportalCandidateUploader(
             origin="WINTERTEST",
-            group_ids=[1076],
-            fritz_filter_id=1016,
-            instrument_id=1066,
-            stream_id=1008,
+            group_ids=[1431],
+            fritz_filter_id=1130,
+            instrument_id=1087,
+            stream_id=3,
             update_thumbnails=True,
-            skyportal_client=SkyportalClient(
-                base_url="https://preview.fritz.science/api/"
-            ),
+            skyportal_client=SkyportalClient(base_url="https://fritz.science/api/"),
         ),
     ]
 
