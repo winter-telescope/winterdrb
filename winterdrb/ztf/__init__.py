@@ -1,0 +1,1 @@
+from winterdrb.ztf.kowalski import download_kowalski_alert_data

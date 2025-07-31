@@ -103,7 +103,7 @@ def combine_reals():
     Function to combine avro files for real sources.
     """
     real_df = get_class_from_google(real=True)
-    df = combine_sources(real_df["#Winter name"].tolist())
+    df = combine_sources(list(set(real_df["#Winter name"].tolist())))
     logging.info(f"Saving to {real_path}")
     df.to_parquet(real_path)
 
@@ -113,6 +113,6 @@ def combine_bogus():
     Function to combine avro files for bogus sources.
     """
     real_df = get_class_from_google(real=False)
-    df = combine_sources(real_df["#Winter name"].tolist())
+    df = combine_sources(list(set(real_df["#Winter name"].tolist())))
     logging.info(f"Saving to {real_path}")
     df.to_parquet(bogus_path)

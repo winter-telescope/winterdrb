@@ -28,26 +28,35 @@ def download_by_path(remote_avro_path: Path, cand_dir: Path, overwrite: bool = F
     else:
         logger.debug(f"Saving to {cache_path}")
         with Connection(host=os.getenv("REMOTE_HOST")) as conn:
-            conn.get(str(remote_avro_path), str(cache_path))
+            try:
+                conn.get(str(remote_avro_path), str(cache_path))
+            except FileNotFoundError:
+                logger.error(f"Failed to download file {remote_avro_path}. Ensure the remote path is correct.")
+                raise
 
     out_path = cand_dir / remote_avro_path.name
 
     if out_path.exists() & (not overwrite):
         logger.debug(f"{out_path} already exists")
-    else:
+    elif cache_path.exists():
         records = []
 
-        with open(cache_path, "rb") as avro_f:
-            avro_reader = reader(avro_f)
-            schema = avro_reader.writer_schema
-            for record in avro_reader:
-                if record["objectid"] == cand_dir.name:
-                    records.append(record)
+        try:
+            with open(cache_path, "rb") as avro_f:
+                avro_reader = reader(avro_f)
+                schema = avro_reader.writer_schema
+                for record in avro_reader:
+                    if record["objectid"] == cand_dir.name:
+                        records.append(record)
 
-        if len(records) > 0:
-            logger.debug(f"Saving to {out_path}")
-            with open(out_path, "wb") as out_f:
-                fastavro.writer(out_f, schema, records)
+            if len(records) > 0:
+                logger.debug(f"Saving to {out_path}")
+                with open(out_path, "wb") as out_f:
+                    fastavro.writer(out_f, schema, records)
+
+        except ValueError as e:
+            logger.error(f"Failed to read avro file {cache_path}. Ensure the file is a valid avro file. {e}")
+            cache_path.unlink()
 
 
 def download_by_name(name: str):
