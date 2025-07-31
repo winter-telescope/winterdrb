@@ -31,14 +31,19 @@ dependencies = [
     "pre-commit",
     "jupyter",
     "mirar",
-    "tqdm"
+    "tqdm",
+    "python-dotenv",
+    "sshtunnel",
+    "imbalanced-learn",
+    "xgboost",
+    "scikit-learn",
 ]
 [project.optional-dependencies]
 dev = [
     "black",
     "isort",
     "pylint",
-    "coveralls",
+    "coveralls"
 ]
 
 [project.urls]

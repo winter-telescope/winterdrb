@@ -3,22 +3,30 @@ Module for path constants and functions.
 """
 import os
 from pathlib import Path
+from dotenv import load_dotenv
 
-INPUT_DATA_DIR = os.getenv("INPUT_DATA_DIR", None)
+load_dotenv()
+
 BASE_DATA_DIR = os.getenv("BASE_DATA_DIR", None)
-
-if INPUT_DATA_DIR is None:
-    raise ValueError(
-        "INPUT_DATA_DIR not set, set it using `export INPUT_DATA_DIR=/path/to/data`"
-    )
 
 if BASE_DATA_DIR is None:
     raise ValueError(
         "BASE_DATA_DIR not set, set it using `export BASE_DATA_DIR=/path/to/data`"
     )
 
-INPUT_DATA_DIR = Path(INPUT_DATA_DIR)
+INPUT_DATA_DIR = os.getenv("INPUT_DATA_DIR", BASE_DATA_DIR)
+
 BASE_DATA_DIR = Path(BASE_DATA_DIR)
+INPUT_DATA_DIR = Path(INPUT_DATA_DIR)
+
+AVRO_DIR = BASE_DATA_DIR / "avro"
+AVRO_DIR.mkdir(parents=True, exist_ok=True)
+AVRO_CACHE_DIR = AVRO_DIR / "avro_cache"
+AVRO_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+
+real_path = AVRO_DIR / "reals.parquet"
+bogus_path = AVRO_DIR / "bogus.parquet"
+train_path = AVRO_DIR / "train.parquet"
 
 
 def get_raw_avro_dir(night: str | int, data_dir: Path = INPUT_DATA_DIR) -> Path:

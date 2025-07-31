@@ -7,7 +7,7 @@ import pandas as pd
 from astropy import visualization
 from matplotlib.colors import Normalize
 from matplotlib.figure import Figure
-from mirar.data.utils import decode_img
+from mirar.data.utils.compress import decode_img
 
 
 def generate_single_page(row: pd.Series, ann_fields: list[str]) -> Figure:
@@ -42,17 +42,19 @@ def generate_single_page(row: pd.Series, ann_fields: list[str]) -> Figure:
 
     ax_l = plt.subplot(2, 3, 4)
 
-    hist = row["prv_candidates"]
-
-    plt.errorbar(
-        hist["jd"],
-        hist["magpsf"],
-        abs(hist["sigmapsf"]),
-        fmt=".",
-        #             label=BAND_NAMES[fid],
-        mec="black",
-        mew=0.5,
-    )
+    try:
+        hist = row["prv_candidates"]
+        plt.errorbar(
+            hist["jd"],
+            hist["magpsf"],
+            abs(hist["sigmapsf"]),
+            fmt=".",
+            #             label=BAND_NAMES[fid],
+            mec="black",
+            mew=0.5,
+        )
+    except KeyError:
+        pass
 
     plt.scatter(row["jd"], row["magpsf"])
     ax_l.set_xlabel("JD")

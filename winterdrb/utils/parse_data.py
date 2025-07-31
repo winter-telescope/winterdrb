@@ -8,7 +8,7 @@ import pandas as pd
 from fastavro import reader
 
 from winterdrb.filtering import apply_clean_filter
-from winterdrb.paths import get_combined_avro_path
+from winterdrb.paths import get_combined_avro_path, real_path, bogus_path
 from winterdrb.utils.combine_avro import combine_avro_files
 
 
@@ -70,7 +70,6 @@ def parse_night_data(night: str | int) -> pd.DataFrame:
 
     if not avro_path.exists():
         combine_avro_files(night)
-
     return load_avro(avro_path)
 
 
@@ -84,3 +83,11 @@ def get_cleaned_night_data(night: str | int) -> pd.DataFrame:
     all_data = parse_night_data(night)
     cut = apply_clean_filter(all_data)
     return cut
+
+def load_real_and_bogus() -> tuple[pd.DataFrame, pd.DataFrame]:
+    """
+    Load the real data from the real_path parqquet file.
+    """
+    real_df = pd.read_parquet(real_path)
+    bogus_df = pd.read_parquet(bogus_path)
+    return real_df, bogus_df
