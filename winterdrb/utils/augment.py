@@ -32,13 +32,17 @@ def load_extra_background(n_images: int | None = 50):
     logger.info(f"Loading {len(avro_files)} images from cache")
 
     for avro_path in avro_files:
-        with open(avro_path, "rb") as avro_f:
-            avro_reader = reader(avro_f)
-            for record in avro_reader:
-                # Skip if the objectid is in the known sources
-                if record["objectid"] in known_sources:
-                    continue
-                records.append(record)
+        try:
+            with open(avro_path, "rb") as avro_f:
+                avro_reader = reader(avro_f)
+                for record in avro_reader:
+                    # Skip if the objectid is in the known sources
+                    if record["objectid"] in known_sources:
+                        continue
+                    records.append(record)
+        except ValueError:
+            logger.error(f"Failed to read avro file {avro_path}. Ensure the file is a valid avro file.")
+            avro_path.unlink()
 
     logging.info(f"Found {len(records)} background entries")
     df = flatten_records(records)

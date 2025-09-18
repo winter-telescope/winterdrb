@@ -6,6 +6,7 @@ import os
 
 from astropy.time import Time
 from penquins import Kowalski
+import pandas as pd
 
 fp_mapping = {"mag": "magpsf", "magerr": "sigmapsf"}
 
@@ -29,6 +30,58 @@ def get_kowalski() -> Kowalski:
         raise ValueError("KOWALSKI_TOKEN environment variable is not set.")
 
     return Kowalski(token=kowalski_token, **kwargs)
+
+
+def check_ztf_name(
+        row: pd.Series,
+        kowalski: Kowalski | None = None,
+):
+    """
+    Download alert data from Kowalski
+
+    :param row: Pandas Series containing 'ra' and 'dec' keys
+    :param kowalski: Kowalski object
+    :return: Alert data
+    """
+    if kowalski is None:
+        kowalski = get_kowalski()
+
+
+    coords = [row["ra"], row["dec"]]
+
+    query_config = {
+        "query_type": "near",
+        "query": {
+            "max_distance": 2.0,
+            "distance_units": "arcsec",
+            "radec": {"query_coords": coords},
+            "catalogs": {
+                "ZTF_alerts": {
+                    "filter": {},
+                    "projection": {
+                        "_id": 1,
+                        "objectId": 1,
+                        "candidate.ra": 1,
+                        "candidate.dec": 1,
+                    },
+                }
+            },
+        },
+        "kwargs": {
+            "limit": 1,
+        },
+    }
+
+    query_result = kowalski.query(query_config)
+
+    if "data" in query_result:
+        alerts = query_result["data"]
+    else:
+        alerts = query_result.get("default").get("data")
+
+    res = alerts.get("ZTF_alerts").get("query_coords")
+
+    return res
 
 
 def download_kowalski_alert_data(

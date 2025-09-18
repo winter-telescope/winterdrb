@@ -37,6 +37,7 @@ dependencies = [
     "imbalanced-learn",
     "xgboost",
     "scikit-learn",
+    "winterrb"
 ]
 [project.optional-dependencies]
 dev = [
